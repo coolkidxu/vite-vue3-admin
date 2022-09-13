@@ -58,4 +58,8 @@
       flex: none;
     }
   }
+
+  :deep(.layout-sider) {
+    background: @primary-color;
+  }
 </style>

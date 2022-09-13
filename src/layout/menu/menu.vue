@@ -49,7 +49,6 @@
       .filter((n) => !n.meta?.hideInMenu)
       .sort((a, b) => (a?.meta?.orderNum || 0) - (b?.meta?.orderNum || 0));
   });
-  console.log('menus', menus.value);
   /** 侧边栏布局 */
   const isSideMenu = computed(() => themeStore.layout === 'sidemenu');
   // 根据activeMenu获取指定的menu
@@ -118,6 +117,58 @@
     &::-webkit-scrollbar {
       width: 0;
       height: 0;
+    }
+  }
+
+  :deep(.ant-menu) {
+    font-size: 20px;
+    background: @primary-color;
+    color: @body-background;
+
+    .ant-menu-submenu-arrow {
+      color: @body-background;
+    }
+
+    .ant-menu-item-selected {
+      background: inherit;
+      color: inherit;
+    }
+
+    .ant-menu-submenu-active {
+      .ant-menu-title-content,
+      .ant-menu-submenu-arrow {
+        color: @body-background;
+      }
+    }
+
+    .ant-menu-submenu-open > .ant-menu-submenu-title {
+      background: rgba(255, 255, 255, 1);
+      color: @primary-color !important;
+
+      .ant-menu-title-content,
+      .ant-menu-submenu-arrow {
+        background: rgba(255, 255, 255, 1);
+        color: @primary-color !important;
+      }
+    }
+
+    .ant-menu-submenu-selected {
+      background: @primary-color;
+      color: @body-background;
+
+      .ant-menu-submenu-title,
+      .ant-menu-submenu-arrow {
+        color: @body-background;
+      }
+    }
+
+    .ant-menu-item:hover {
+      color: @body-background;
+    }
+
+    .ant-menu-item,
+    .ant-menu-submenu-title {
+      padding-left: 24px !important;
     }
   }
 </style>

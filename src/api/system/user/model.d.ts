@@ -35,22 +35,11 @@ declare namespace API {
 
   /** 管理员用户详情 */
   type AdminUserInfo = {
-    createTime: string;
-    updateTime: string;
-    id: number;
-    departmentId: number;
-    name: string;
-    username: string;
-    password: string;
-    psalt: string;
-    nickName: string;
-    headImg: string;
-    email: string;
-    phone: string;
-    remark: string;
-    status: number;
-    roles: string[];
-    departmentName: string;
+    RID: string;
+    RName: string;
+    UID: string;
+    UName: string;
+    ok: string;
   };
 
   /** 更新管理员用户参数 */

@@ -5,9 +5,9 @@ import { store } from '@/store';
 import { login } from '@/api/login';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { logout, getInfo, permmenu } from '@/api/account';
-import { generatorDynamicRouter } from '@/router/generator-router';
+import { logout } from '@/api/account';
 import { resetRouter } from '@/router';
+import { generatorDynamicRouter } from '@/router/generator-router';
 
 interface UserState {
   token: string;
@@ -42,6 +42,9 @@ export const useUserStore = defineStore({
     getPerms(): string[] {
       return this.perms;
     },
+    getUserInfo(): Partial<API.AdminUserInfo> {
+      return this.userInfo;
+    },
   },
   actions: {
     /** 清空token及用户信息 */
@@ -58,12 +61,16 @@ export const useUserStore = defineStore({
       const ex = 7 * 24 * 60 * 60 * 1000;
       Storage.set(ACCESS_TOKEN_KEY, this.token, ex);
     },
+    setAvatar(avatar: string) {
+      this.avatar = avatar;
+    },
+
     /** 登录 */
     async login(params: API.LoginParams) {
       try {
-        const { data } = await login(params);
-        this.setToken(data.token);
-        return this.afterLogin();
+        // @ts-ignore
+        this.userInfo = await login(params);
+        //return this.afterLogin();
       } catch (error) {
         return Promise.reject(error);
       }
@@ -72,17 +79,15 @@ export const useUserStore = defineStore({
     async afterLogin() {
       try {
         const wsStore = useWsStore();
-        const [userInfo, { perms, menus }] = await Promise.all([getInfo(), permmenu()]);
+        /*        const [userInfo, { perms, menus }] = await Promise.all([getInfo(), permmenu()]);
         this.perms = perms;
         this.name = userInfo.name;
         this.avatar = userInfo.headImg;
-        this.userInfo = userInfo;
+        this.userInfo = userInfo;*/
         // 生成路由
-        const generatorResult = await generatorDynamicRouter(menus);
+        const generatorResult = await generatorDynamicRouter([]);
         this.menus = generatorResult.menus.filter((item) => !item.meta?.hideInMenu);
         !wsStore.client && wsStore.initSocket();
-
-        return { menus, perms, userInfo };
       } catch (error) {
         return Promise.reject(error);
         // return this.logout();

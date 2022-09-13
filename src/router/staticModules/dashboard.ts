@@ -25,6 +25,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import(/* webpackChunkName: "dashboard-welcome" */ '@/views/dashboard/welcome/index.vue'),
       },
+      {
+        path: 'device',
+        name: `${moduleName}-device`,
+        meta: {
+          title: t('routes.dashboard.device'),
+          icon: 'icon-shouye',
+        },
+        component: () =>
+          import(/* webpackChunkName: "dashboard-welcome" */ '@/views/device/DeviceManagement.vue'),
+      },
     ],
   },
 ];

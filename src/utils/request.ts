@@ -48,26 +48,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const res = response.data;
-
+    return res;
     // if the custom code is not 200, it is judged as an error.
-    if (res.code !== 200) {
+    /* if (res.code !== 200) {
       $message.error(res.message || UNKNOWN_ERROR);
 
       // Illegal token
       if (res.code === 11001 || res.code === 11002) {
         window.localStorage.clear();
         window.location.reload();
-        // to re-login
-        // Modal.confirm({
-        //   title: '警告',
-        //   content: res.message || '账号异常，您可以取消停留在该页上，或重新登录',
-        //   okText: '重新登录',
-        //   cancelText: '取消',
-        //   onOk: () => {
-        //     localStorage.clear();
-        //     window.location.reload();
-        //   }
-        // });
       }
 
       // throw other
@@ -76,7 +65,7 @@ service.interceptors.response.use(
       return Promise.reject(error);
     } else {
       return res;
-    }
+    }*/
   },
   (error) => {
     // 处理 422 或者 500 的错误异常提示

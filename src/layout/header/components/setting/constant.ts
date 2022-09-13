@@ -18,7 +18,7 @@ export const themeColors = [
   {
     title: '拂晓蓝（默认）',
     key: 'daybreak',
-    value: 'rgb(24, 144, 255)',
+    value: 'rgb(27, 49, 148)',
   },
   {
     title: '薄暮',

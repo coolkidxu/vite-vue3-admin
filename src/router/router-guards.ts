@@ -7,7 +7,6 @@ import { useUserStore } from '@/store/modules/user';
 import { useKeepAliveStore } from '@/store/modules/keepAlive';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
-import { to as _to } from '@/utils/awaitTo';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -17,26 +16,13 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
   router.beforeEach(async (to, _, next) => {
     NProgress.start(); // start progress bar
     const userStore = useUserStore();
-    const token = Storage.get(ACCESS_TOKEN_KEY, null);
 
-    if (token) {
+    if (userStore.userInfo.RID) {
       if (to.name === LOGIN_NAME) {
         next({ path: defaultRoutePath });
       } else {
-        const hasRoute = router.hasRoute(to.name!);
         if (userStore.menus.length === 0) {
-          // 从后台获取菜单
-          const [err] = await _to(userStore.afterLogin());
-          if (err) {
-            userStore.resetToken();
-            return next({ name: LOGIN_NAME });
-          }
-          if (!hasRoute) {
-            // 如果该路由不存在，可能是动态注册的路由，它还没准备好，需要再重定向一次到该路由
-            next({ ...to, replace: true });
-          } else {
-            next();
-          }
+          next();
         } else {
           next();
         }

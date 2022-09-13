@@ -7,7 +7,7 @@
     </div>
     <a-form layout="horizontal" :model="state.formInline" @submit.prevent="handleSubmit">
       <a-form-item>
-        <a-input v-model:value="state.formInline.username" size="large" placeholder="rootadmin">
+        <a-input v-model:value="state.formInline.name" size="large">
           <template #prefix><user-outlined type="user" /></template>
         </a-input>
       </a-form-item>
@@ -23,23 +23,6 @@
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input
-          v-model:value="state.formInline.verifyCode"
-          placeholder="验证码"
-          :maxlength="4"
-          size="large"
-        >
-          <template #prefix><SafetyOutlined /></template>
-          <template #suffix>
-            <img
-              :src="state.captcha"
-              class="absolute right-0 h-full cursor-pointer"
-              @click="setCaptcha"
-            />
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item>
         <a-button type="primary" html-type="submit" size="large" :loading="state.loading" block>
           登录
         </a-button>
@@ -50,21 +33,19 @@
 
 <script setup lang="ts">
   import { reactive } from 'vue';
-  import { UserOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons-vue';
+  import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { useRoute, useRouter } from 'vue-router';
   import { message, Modal } from 'ant-design-vue';
   import { useUserStore } from '@/store/modules/user';
-  import { getImageCaptcha } from '@/api/login';
   import { to } from '@/utils/awaitTo';
 
   const state = reactive({
     loading: false,
     captcha: '',
     formInline: {
-      username: '',
+      name: '',
       password: '',
-      verifyCode: '',
-      captchaId: '',
+      loginType: 0,
     },
   });
 
@@ -73,21 +54,12 @@
 
   const userStore = useUserStore();
 
-  const setCaptcha = async () => {
-    const { id, img } = await getImageCaptcha({ width: 100, height: 50 });
-    state.captcha = img;
-    state.formInline.captchaId = id;
-  };
-  setCaptcha();
-
   const handleSubmit = async () => {
-    const { username, password, verifyCode } = state.formInline;
-    if (username.trim() == '' || password.trim() == '') {
+    const { name, password } = state.formInline;
+    if (name.trim() == '' || password.trim() == '') {
       return message.warning('用户名或密码不能为空！');
     }
-    if (!verifyCode) {
-      return message.warning('请输入验证码！');
-    }
+
     message.loading('登录中...', 0);
     state.loading = true;
     console.log(state.formInline);
@@ -99,7 +71,6 @@
         title: () => '提示',
         content: () => err.message,
       });
-      setCaptcha();
     } else {
       message.success('登录成功！');
       setTimeout(() => router.replace((route.query.redirect as string) ?? '/'));

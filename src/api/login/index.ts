@@ -9,7 +9,8 @@ import { request } from '@/utils/request';
 export function login(data: API.LoginParams) {
   return request<BaseResponse<API.LoginResult>>(
     {
-      url: 'login',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      url: 'cgi-bin/Session.cgi',
       method: 'post',
       data,
     },
